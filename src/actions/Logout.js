@@ -7,6 +7,15 @@ export async function logoutAction(){
         key: "userName"
     })
 
+    deleteItem({
+        key: "budgets"
+    })
+
+    deleteItem({
+        key: "expenses"
+    })
+
+
     toast.success("You've deleted your account")
     
     return redirect("/")
