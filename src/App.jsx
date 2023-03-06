@@ -4,6 +4,7 @@ import {
 } from "react-router-dom";
 import Dashboard , { dashboardAction, dashboardLoader} from "./views/Dashboard";
 import Error from "./views/Error";
+import ExpensesPage, { expensesLoader } from "./views/ExpensesPage";
 import Main, {mainLoader} from "./layouts/Main";
 import { logoutAction } from './actions/Logout.js'
 import { ToastContainer } from 'react-toastify';
@@ -22,6 +23,11 @@ const router = createBrowserRouter([
         loader: dashboardLoader,
         action: dashboardAction,  
         errorElement: <Error/>
+      },
+      {
+        path: "expenses",
+        element: <ExpensesPage />,
+        loader: expensesLoader,
       },
       {
         path: 'logout',
