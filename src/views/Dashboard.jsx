@@ -1,5 +1,5 @@
 import { Link, useLoaderData } from "react-router-dom";
-import { createBudget, fetchData, wait, createExpense } from "../helpers/helpers"
+import { createBudget, fetchData, wait, createExpense, deleteItem } from "../helpers/helpers"
 import Intro from "../components/Intro";
 import { toast } from "react-toastify";
 
@@ -62,6 +62,18 @@ export async function dashboardAction({ request }) {
             throw new Error("There was a problem creating your expense.")
         }
     }
+
+    if (_action === "deleteExpense") {
+        try {
+            deleteItem({
+                key: "expenses",
+                id: values.expenseId,
+            });
+            return toast.success("Expense deleted!");
+        } catch (e) {
+            throw new Error("There was a problem deleting your expense.");
+        }
+    }
 }
 
 
@@ -92,15 +104,15 @@ const Dashboard = () => {
                                         }
                                     </div>
                                     {
-                                        expenses && expenses.length > 0 
+                                        expenses && expenses.length > 0
                                         && (
                                             <div className="grid-md">
                                                 <h2>Recent Expenses</h2>
-                                                <Table 
+                                                <Table
                                                     expenses={expenses
                                                         .sort((a, b) => b.createdAt - a.createdAt)
-                                                        .slice(0,8)
-                                                }
+                                                        .slice(0, 8)
+                                                    }
                                                 />
                                                 {expenses.length > 8 && (
                                                     <Link
@@ -115,17 +127,17 @@ const Dashboard = () => {
                                     }
                                 </div>
                                 : (<>
-                                        <div className="grid-sm">
-                                            <p>Personal budgeting is the secret to financial freedom.</p>
-                                            <p>Create a budget to get started!</p>
+                                    <div className="grid-sm">
+                                        <p>Personal budgeting is the secret to financial freedom.</p>
+                                        <p>Create a budget to get started!</p>
+                                    </div>
+                                    <div className="grid-lg">
+                                        <div className="flex-lg">
+                                            <AddBudgetForm />
                                         </div>
-                                        <div className="grid-lg">
-                                            <div className="flex-lg">
-                                                <AddBudgetForm />
-                                            </div>
-                                        </div>
-                                    </>
-                                    )
+                                    </div>
+                                </>
+                                )
                         }
                     </div>
                 </div>

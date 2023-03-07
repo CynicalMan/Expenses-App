@@ -4,9 +4,14 @@ export const wait = () => new Promise(res => setTimeout(res, Math.random() * 200
 
 const generateRandomColor = () => {
     const existingBudgetsLength = fetchData("budgets")?.length ?? 0;
-    
-    return  `${existingBudgetsLength * 34} 65% 50%`
+
+    return `${existingBudgetsLength * 34} 65% 50%`
 }
+
+export const getAllMatchingItems = ({ category, key, value }) => {
+    const data = fetchData(category) ?? [];
+    return data.filter((item) => item[key] === value);
+};
 
 // local storage
 export const fetchData = (key) => {
@@ -14,7 +19,7 @@ export const fetchData = (key) => {
 };
 
 //create budget 
-export const createBudget = ({name, amount}) => {
+export const createBudget = ({ name, amount }) => {
     const newItem = {
         id: crypto.randomUUID(),
         name: name,
@@ -25,11 +30,11 @@ export const createBudget = ({name, amount}) => {
 
     const existingBudgets = fetchData("budgets") ?? [];
 
-    return localStorage.setItem("budgets",JSON.stringify([...existingBudgets, newItem]));
+    return localStorage.setItem("budgets", JSON.stringify([...existingBudgets, newItem]));
 };
 
 //create expense 
-export const createExpense = ({name, amount, budgetId}) => {
+export const createExpense = ({ name, amount, budgetId }) => {
     const newItem = {
         id: crypto.randomUUID(),
         name: name,
@@ -40,24 +45,29 @@ export const createExpense = ({name, amount, budgetId}) => {
 
     const existingExpenses = fetchData("expenses") ?? [];
 
-    return localStorage.setItem("expenses",JSON.stringify([...existingExpenses, newItem]));
+    return localStorage.setItem("expenses", JSON.stringify([...existingExpenses, newItem]));
 };
 
-export const deleteItem = ({key}) => {
+export const deleteItem = ({ key, id }) => {
+    const existingData = fetchData(key);
+    if (id) {
+        const newData = existingData.filter((item) => item.id !== id);
+        return localStorage.setItem(key, JSON.stringify(newData));
+    }
     return localStorage.removeItem(key);
 };
 
-export const calculateSpentByBudget = ({budgetId}) => {
+export const calculateSpentByBudget = ({ budgetId }) => {
     const expenses = fetchData("expenses") ?? [];
 
     const budgetSpent = expenses.reduce((acc, expense) => {
-        if(expense.BudgetId !== budgetId) {
+        if (expense.BudgetId !== budgetId) {
             return acc
         }
 
         return acc += expense.amount
 
-    }, 0)  
+    }, 0)
     return budgetSpent
 }
 
@@ -68,7 +78,7 @@ export const formatPercentage = (amt) => {
     return amt.toLocaleString(undefined, {
         style: "currency",
         currency: "USD"
-    }) 
+    })
 }
 
 export const formatCurrency = (amt) => {
