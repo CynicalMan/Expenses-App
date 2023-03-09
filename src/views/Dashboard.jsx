@@ -53,8 +53,8 @@ export async function dashboardAction({ request }) {
             createExpense({
                 name: values.newExpense,
                 amount: values.newExpenseAmount,
-                budgetId: values.newExpenseBudget
-            })
+                budgetId: values.newExpenseBudget,
+            });
 
             return toast.success(`Expense ${values.newExpense} created!`)
         } catch (error) {
@@ -98,8 +98,8 @@ const Dashboard = () => {
                                     <h2>Existing Budgets</h2>
                                     <div className="budgets">
                                         {
-                                            budgets.map((bud) => (
-                                                <BudgetItem key={bud.id} budget={bud} />
+                                            budgets.map((budget) => (
+                                                <BudgetItem key={budget.id} budget={budget} />
                                             ))
                                         }
                                     </div>
